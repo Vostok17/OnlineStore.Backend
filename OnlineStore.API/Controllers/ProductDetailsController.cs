@@ -6,6 +6,5 @@ namespace OnlineStore.API.Controllers
     [ApiController]
     public class ProductDetailsController : ControllerBase
     {
-        
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using OnlineStore.API.Models.Home;
 using OnlineStore.Domain.Entities;
 
 namespace OnlineStore.API.Controllers
@@ -43,10 +45,20 @@ namespace OnlineStore.API.Controllers
             },
         };
 
+        private readonly IMapper _mapper;
+
+        public HomeController(IMapper mapper) => _mapper = mapper;
+
         [HttpGet("laptops")]
         public ActionResult<IEnumerable<Laptop>> GetLaptops()
         {
-            return Ok(_laptops);
+            var homeLaptops = new List<LaptopModel>();
+            foreach (var laptop in _laptops)
+            {
+                homeLaptops.Add(_mapper.Map<LaptopModel>(laptop));
+            }
+
+            return Ok(homeLaptops);
         }
     }
 }

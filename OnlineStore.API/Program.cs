@@ -1,6 +1,6 @@
-using Home = OnlineStore.API.MappingProfiles.Home;
-using ProductDetails = OnlineStore.API.MappingProfiles.ProductDetails;
-using ShoppingCart = OnlineStore.API.MappingProfiles.ShoppingCart;
+using OnlineStore.API.Extensions;
+
+const string DefaultCorsPolicy = "DefaultCorsPolicy";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,11 +11,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add CORS policy.
+builder.Services.AddCors(options => options.AddPolicy(
+    name: DefaultCorsPolicy,
+    policy => policy.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader()));
+
 // Add AutoMapper profiles.
-builder.Services.AddAutoMapper(
-    typeof(Home.LaptopProfile),
-    typeof(ProductDetails.LaptopProfile),
-    typeof(ShoppingCart.LaptopProfile));
+builder.Services.AddAutoMapperProfiles();
 
 var app = builder.Build();
 
@@ -25,6 +27,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(DefaultCorsPolicy);
 
 app.UseHttpsRedirection();
 

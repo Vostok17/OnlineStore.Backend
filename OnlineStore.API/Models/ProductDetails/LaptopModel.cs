@@ -1,4 +1,8 @@
-﻿namespace OnlineStore.API.Models.ProductDetails
+﻿
+using AutoMapper;
+using OnlineStore.Domain.Entities;
+
+namespace OnlineStore.API.Models.ProductDetails
 {
     public class LaptopModel
     {
@@ -27,5 +31,13 @@
         public string WiFi { get; set; }
 
         public string Bluetooth { get; set; }
+
+        private class LaptopProfile : Profile
+        {
+            public LaptopProfile()
+            {
+                CreateMap<Laptop, LaptopModel>();
+            }
+        }
     }
 }

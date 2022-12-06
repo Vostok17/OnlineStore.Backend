@@ -9,13 +9,13 @@ namespace OnlineStore.API.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
-        private static readonly Laptop[] _laptops = new[]
+        private static readonly List<Laptop> _domainLaptopData = new()
         {
             new Laptop()
             {
                 Id = 0,
                 Title = "ASUS Vivobook 15 X1502ZA-BQ641",
-                ImageLink = "laptopImg",
+                ImageLink = "https://content1.rozetka.com.ua/goods/images/big/297014689.jpg",
                 Price = 31999m,
                 Diagonal = "13.3\" (2560x1600) WQXGA",
                 RefreshRate = "60 Hz",
@@ -31,7 +31,23 @@ namespace OnlineStore.API.Controllers
             {
                 Id = 1,
                 Title = "Acer Aspire 5 A515-45G-R9ML",
-                ImageLink = "acerImg",
+                ImageLink = "https://content1.rozetka.com.ua/goods/images/big/248481392.jpg",
+                Price = 26999m,
+                Diagonal = "13.3\" (2560x1600) WQXGA",
+                RefreshRate = "60 Hz",
+                Cpu = "Octa-core Apple M1",
+                OperatingSystem = "macOS Big Sur",
+                AmountOfRam = "4 Gb",
+                Ssd = "256 Gb",
+                Gpu = "Integrated",
+                WiFi = string.Empty,
+                Bluetooth = "5.0",
+            },
+            new Laptop()
+            {
+                Id = 2,
+                Title = "Apple MacBook Air 13\" M1 256GB 2020",
+                ImageLink = "https://content.rozetka.com.ua/goods/images/big/30872664.jpg",
                 Price = 26999m,
                 Diagonal = "13.3\" (2560x1600) WQXGA",
                 RefreshRate = "60 Hz",
@@ -47,18 +63,43 @@ namespace OnlineStore.API.Controllers
 
         private readonly IMapper _mapper;
 
-        public HomeController(IMapper mapper) => _mapper = mapper;
+        private List<LaptopModel> _laptops = new();
+
+        public HomeController(IMapper mapper)
+        {
+            _mapper = mapper;
+
+            foreach (var laptop in _domainLaptopData)
+            {
+                _laptops.Add(_mapper.Map<LaptopModel>(laptop));
+            }
+        }
 
         [HttpGet("laptops")]
-        public ActionResult<IEnumerable<Laptop>> GetLaptops()
+        public ActionResult<IEnumerable<LaptopModel>> GetLaptops()
         {
-            var homeLaptops = new List<LaptopModel>();
-            foreach (var laptop in _laptops)
-            {
-                homeLaptops.Add(_mapper.Map<LaptopModel>(laptop));
-            }
+            return Ok(_laptops);
+        }
 
-            return Ok(homeLaptops);
+        [HttpGet("laptop/{id}")]
+        public ActionResult<LaptopModel> GetLaptop(int id)
+        {
+            try
+            {
+                return Ok(_laptops[id]);
+            }
+            catch
+            {
+                return BadRequest(new { message = "Laptop with such ID does not exist." });
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult RemoveLaptop(int id)
+        {
+            _laptops.RemoveAll(l => l.Id == id);
+
+            return Ok(_laptops);
         }
     }
 }

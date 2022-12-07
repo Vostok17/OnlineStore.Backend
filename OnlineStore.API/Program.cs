@@ -19,6 +19,12 @@ builder.Services.AddCors(options => options.AddPolicy(
 // Add AutoMapper profiles.
 builder.Services.AddAutoMapperProfiles();
 
+// Solve problem with swagger schemaId.
+builder.Services.AddSwaggerGen(options =>
+{
+    options.CustomSchemaIds(type => type.ToString());
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

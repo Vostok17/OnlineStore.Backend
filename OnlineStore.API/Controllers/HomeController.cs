@@ -80,26 +80,5 @@ namespace OnlineStore.API.Controllers
         {
             return Ok(_laptops);
         }
-
-        [HttpGet("laptop/{id}")]
-        public ActionResult<LaptopModel> GetLaptop(int id)
-        {
-            try
-            {
-                return Ok(_laptops[id]);
-            }
-            catch
-            {
-                return BadRequest(new { message = "Laptop with such ID does not exist." });
-            }
-        }
-
-        [HttpDelete("{id}")]
-        public ActionResult RemoveLaptop(int id)
-        {
-            _laptops.RemoveAll(l => l.Id == id);
-
-            return Ok(_laptops);
-        }
     }
 }

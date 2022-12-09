@@ -9,9 +9,9 @@ namespace OnlineStore.API.Extensions
         public static void AddAutoMapperProfiles(this IServiceCollection services)
         {
             services.AddAutoMapper(
-                typeof(Home.LaptopModel),
-                typeof(ProductDetails.LaptopModel),
-                typeof(ShoppingCart.LaptopModel));
+                typeof(Home.LaptopItemModel),
+                typeof(ProductDetails.LaptopDetailsModel),
+                typeof(ShoppingCart.LaptopCartModel));
         }
     }
 }

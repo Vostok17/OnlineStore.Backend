@@ -1,10 +1,9 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using OnlineStore.Domain.Entities;
 
 namespace OnlineStore.API.Models.ProductDetails
 {
-    public class LaptopModel
+    public class LaptopDetailsModel
     {
         public int Id { get; set; }
 
@@ -36,7 +35,7 @@ namespace OnlineStore.API.Models.ProductDetails
         {
             public LaptopProfile()
             {
-                CreateMap<Laptop, LaptopModel>();
+                CreateMap<Laptop, LaptopDetailsModel>();
             }
         }
     }

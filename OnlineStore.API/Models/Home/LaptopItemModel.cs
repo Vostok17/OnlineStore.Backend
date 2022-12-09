@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using OnlineStore.Domain.Entities;
 
-namespace OnlineStore.API.Models.ShoppingCart
+namespace OnlineStore.API.Models.Home
 {
-    public class LaptopModel
+    public class LaptopItemModel
     {
         public int Id { get; set; }
 
@@ -13,13 +13,11 @@ namespace OnlineStore.API.Models.ShoppingCart
 
         public decimal Price { get; set; }
 
-        public int Count { get; set; }
-
         private class LaptopProfile : Profile
         {
             public LaptopProfile()
             {
-                CreateMap<Laptop, LaptopModel>();
+                CreateMap<Laptop, LaptopItemModel>();
             }
         }
     }

@@ -62,9 +62,9 @@ namespace OnlineStore.Domain.Services
             },
         };
 
-        public Laptop? GetLaptopDetailsById(int id)
+        public Laptop GetLaptopDetailsById(int id)
         {
-            return _laptops.FirstOrDefault(l => l.Id == id);
+            return _laptops.SingleOrDefault(l => l.Id == id);
         }
     }
 }

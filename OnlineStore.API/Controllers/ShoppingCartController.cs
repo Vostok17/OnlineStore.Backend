@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.API.Models.ShoppingCart;
 using OnlineStore.Domain.Contracts.Services;
+using OnlineStore.Domain.Entities;
 
 namespace OnlineStore.API.Controllers
 {
@@ -27,9 +28,10 @@ namespace OnlineStore.API.Controllers
         [HttpGet(Name = "GetShoppingCart")]
         public ActionResult<IEnumerable<LaptopCartModel>> GetShoppingCart()
         {
-            var laptops = _shoppingCartService.GetLaptops().Select(l => _mapper.Map<LaptopCartModel>(l));
+            IEnumerable<Laptop> laptops = _shoppingCartService.GetLaptops();
+            var laptopCartModels = _mapper.Map<IEnumerable<LaptopCartModel>>(laptops);
 
-            return Ok(laptops);
+            return Ok(laptopCartModels);
         }
     }
 }

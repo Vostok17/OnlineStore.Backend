@@ -9,6 +9,6 @@ namespace OnlineStore.Domain.Contracts.Services
 {
     public interface IProductDetailsService
     {
-        Laptop? GetLaptopDetailsById(int id);
+        Laptop GetLaptopDetailsById(int id);
     }
 }

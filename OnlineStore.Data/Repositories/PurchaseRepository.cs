@@ -64,7 +64,8 @@ namespace OnlineStore.Data.Repositories
         {
             const string sql =
                 "SELECT purchase_token, user_id, laptop_id, COUNT(*) FROM purchase p " +
-                "GROUP BY p.purchase_token, p.laptop_id, p.user_id";
+                "GROUP BY p.purchase_token, p.laptop_id, p.user_id " +
+                "WHERE @purchase_token=@token";
 
             return await _session.Connection.QueryAsync<PurchasedItem>(sql, new { token });
         }

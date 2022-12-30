@@ -7,7 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="FluentMigrator.Extensions.Postgres" Version="3.3.2" />
+    <PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
+    <PackageReference Include="Npgsql" Version="7.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OnlineStore.Domain\OnlineStore.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,14 +1,15 @@
 ﻿using OnlineStore.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineStore.Domain.Contracts.Services
 {
     public interface IProductDetailsService
     {
-        Laptop GetLaptopDetailsById(int id);
+        Task<int> AddLaptopDetailsAsync(Laptop laptop);
+
+        Task<bool> DeleteLaptopDetailsAsync(int id);
+
+        Task<Laptop> GetLaptopDetailsAsync(int id);
+
+        Task UpdateLaptopDetailsAsync(Laptop laptop);
     }
 }

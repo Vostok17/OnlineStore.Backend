@@ -7,9 +7,9 @@ namespace OnlineStore.API.Extensions
     {
         public static void AddDomainServices(this IServiceCollection services)
         {
-            services.AddSingleton<IHomeService, HomeService>()
-                    .AddSingleton<IProductDetailsService, ProductDetailsService>()
-                    .AddSingleton<IShoppingCartService, ShoppingCartService>();
+            services.AddTransient<IHomeService, HomeService>()
+                    .AddTransient<IProductDetailsService, ProductDetailsService>()
+                    .AddTransient<IShoppingCartService, ShoppingCartSevice>();
         }
     }
 }

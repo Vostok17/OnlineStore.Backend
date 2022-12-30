@@ -1,70 +1,40 @@
-﻿using OnlineStore.Domain.Contracts.Services;
+﻿using OnlineStore.Domain.Contracts.Repositories;
+using OnlineStore.Domain.Contracts.Services;
 using OnlineStore.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineStore.Domain.Services
 {
     public class ProductDetailsService : IProductDetailsService
     {
-        List<Laptop> _laptops = new()
-        {
-            new Laptop()
-            {
-                Id = 0,
-                Title = "ASUS Vivobook 15 X1502ZA-BQ641",
-                ImageLink = "https://content1.rozetka.com.ua/goods/images/big/297014689.jpg",
-                Price = 31999m,
-                Diagonal = "13.3\" (2560x1600) WQXGA",
-                RefreshRate = "60 Hz",
-                Cpu = "Octa-core Apple M1",
-                OperatingSystem = "macOS Big Sur",
-                AmountOfRam = "4 Gb",
-                Ssd = "256 Gb",
-                Gpu = "Integrated",
-                WiFi = string.Empty,
-                Bluetooth = "5.0",
-            },
-            new Laptop()
-            {
-                Id = 1,
-                Title = "Acer Aspire 5 A515-45G-R9ML",
-                ImageLink = "https://content1.rozetka.com.ua/goods/images/big/248481392.jpg",
-                Price = 26999m,
-                Diagonal = "13.3\" (2560x1600) WQXGA",
-                RefreshRate = "60 Hz",
-                Cpu = "Octa-core Apple M1",
-                OperatingSystem = "macOS Big Sur",
-                AmountOfRam = "4 Gb",
-                Ssd = "256 Gb",
-                Gpu = "Integrated",
-                WiFi = string.Empty,
-                Bluetooth = "5.0",
-            },
-            new Laptop()
-            {
-                Id = 2,
-                Title = "Apple MacBook Air 13\" M1 256GB 2020",
-                ImageLink = "https://content.rozetka.com.ua/goods/images/big/30872664.jpg",
-                Price = 26999m,
-                Diagonal = "13.3\" (2560x1600) WQXGA",
-                RefreshRate = "60 Hz",
-                Cpu = "Octa-core Apple M1",
-                OperatingSystem = "macOS Big Sur",
-                AmountOfRam = "4 Gb",
-                Ssd = "256 Gb",
-                Gpu = "Integrated",
-                WiFi = string.Empty,
-                Bluetooth = "5.0",
-            },
-        };
+        private readonly ILaptopRepository _laptopRepository;
 
-        public Laptop GetLaptopDetailsById(int id)
+        public ProductDetailsService(ILaptopRepository laptopRepository)
         {
-            return _laptops.SingleOrDefault(l => l.Id == id);
+            _laptopRepository = laptopRepository;
+        }
+
+        public async Task<Laptop> GetLaptopDetailsAsync(int id)
+        {
+            return await _laptopRepository.GetByIdAsync(id);
+        }
+
+        public async Task<int> AddLaptopDetailsAsync(Laptop laptop)
+        {
+            // Validation here.
+            return await _laptopRepository.CreateAsync(laptop);
+        }
+
+        public async Task<bool> DeleteLaptopDetailsAsync(int id)
+        {
+            int affectedRows = await _laptopRepository.DeleteAsync(id);
+
+            return affectedRows > 0;
+        }
+
+        public async Task UpdateLaptopDetailsAsync(Laptop laptop)
+        {
+            // Validaion here.
+            await _laptopRepository.UpdateAsync(laptop);
         }
     }
 }

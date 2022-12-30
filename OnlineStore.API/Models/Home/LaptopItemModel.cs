@@ -17,7 +17,7 @@ namespace OnlineStore.API.Models.Home
         {
             public LaptopProfile()
             {
-                CreateMap<Laptop, LaptopItemModel>();
+                CreateMap<Laptop, LaptopItemModel>().ReverseMap();
             }
         }
     }

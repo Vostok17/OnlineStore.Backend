@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OnlineStore.API.Models.ShoppingCart;
 using OnlineStore.Domain.Contracts.Services;
 using OnlineStore.Domain.Entities;
@@ -10,28 +9,32 @@ namespace OnlineStore.API.Controllers
     [ApiController]
     public class ShoppingCartController : ControllerBase
     {
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IMapper _mapper;
+        private readonly IShoppingCartService _purchaseService;
 
-        public ShoppingCartController(IShoppingCartService shoppingCartService, IMapper mapper)
+        public ShoppingCartController(IShoppingCartService purchaseService)
         {
-            _shoppingCartService = shoppingCartService;
-            _mapper = mapper;
+            _purchaseService = purchaseService;
         }
 
-        [HttpPost]
-        public ActionResult<IEnumerable<LaptopCartModel>> PostShoppingCart(List<LaptopCartModel> laptops)
+        [HttpPost("{userId}")]
+        public async Task<ActionResult<IEnumerable<LaptopCartModel>>> Post(List<(int Id, int Count)> items, int userId)
         {
-            return CreatedAtRoute("GetShoppingCart", laptops);
+            Guid token = await _purchaseService.ProcessPurchaseAsync(items, userId);
+
+            return CreatedAtRoute("GetShoppingCart", token, await GetShoppingCart(token));
         }
 
-        [HttpGet(Name = "GetShoppingCart")]
-        public ActionResult<IEnumerable<LaptopCartModel>> GetShoppingCart()
+        [HttpGet("{token}", Name = "GetShoppingCart")]
+        public async Task<ActionResult<IEnumerable<LaptopCartModel>>> GetShoppingCart(Guid token)
         {
-            IEnumerable<Laptop> laptops = _shoppingCartService.GetLaptops();
-            var laptopCartModels = _mapper.Map<IEnumerable<LaptopCartModel>>(laptops);
+            IEnumerable<PurchasedItem> items = await _purchaseService.GetItemsByPurchaseToken(token);
 
-            return Ok(laptopCartModels);
+            if (items is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(items);
         }
     }
 }

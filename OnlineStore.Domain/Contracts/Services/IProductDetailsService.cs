@@ -6,7 +6,7 @@ namespace OnlineStore.Domain.Contracts.Services
     {
         Task<int> AddLaptopDetailsAsync(Laptop laptop);
 
-        Task<bool> DeleteLaptopDetailsAsync(int id);
+        Task DeleteLaptopDetailsAsync(int id);
 
         Task<Laptop> GetLaptopDetailsAsync(int id);
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using OnlineStore.API.Models.ShoppingCart;
 using OnlineStore.Domain.Contracts.Services;
 using OnlineStore.Domain.Entities;
@@ -10,31 +11,39 @@ namespace OnlineStore.API.Controllers
     public class ShoppingCartController : ControllerBase
     {
         private readonly IShoppingCartService _purchaseService;
+        private readonly IMapper _mapper;
 
-        public ShoppingCartController(IShoppingCartService purchaseService)
+        public ShoppingCartController(IShoppingCartService purchaseService, IMapper mapper)
         {
             _purchaseService = purchaseService;
+            _mapper = mapper;
         }
 
         [HttpPost("{userId}")]
-        public async Task<ActionResult<IEnumerable<LaptopCartModel>>> Post(List<(int Id, int Count)> items, int userId)
+        public async Task<ActionResult<string>> PostShoppingCart(
+            IEnumerable<PurchasedLaptopModel> items,
+            int userId)
         {
-            Guid token = await _purchaseService.ProcessPurchaseAsync(items, userId);
+            List<(int Id, int Count)> purchasedItems = items.Select(i => (i.Id, i.Count)).ToList();
 
-            return CreatedAtRoute("GetShoppingCart", token, await GetShoppingCart(token));
+            Guid token = await _purchaseService.ProcessPurchaseAsync(purchasedItems, userId);
+
+            return CreatedAtRoute("GetShoppingCart", new { token }, "Successfully created");
         }
 
         [HttpGet("{token}", Name = "GetShoppingCart")]
         public async Task<ActionResult<IEnumerable<LaptopCartModel>>> GetShoppingCart(Guid token)
         {
-            IEnumerable<PurchasedItem> items = await _purchaseService.GetItemsByPurchaseToken(token);
+            IEnumerable<PurchasedItem> purchasedItems = await _purchaseService.GetItemsByPurchaseToken(token);
 
-            if (items is null)
+            if (purchasedItems is null)
             {
                 return NotFound();
             }
 
-            return Ok(items);
+            IEnumerable<LaptopCartModel> cartItemModels = _mapper.Map<IEnumerable<LaptopCartModel>>(purchasedItems);
+
+            return Ok(cartItemModels);
         }
     }
 }

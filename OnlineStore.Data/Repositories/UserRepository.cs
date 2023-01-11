@@ -2,6 +2,7 @@
 using OnlineStore.Data.Repositories.Core;
 using OnlineStore.Domain.Contracts.Repositories;
 using OnlineStore.Domain.Entities;
+using static Dapper.SqlMapper;
 
 namespace OnlineStore.Data.Repositories
 {
@@ -24,6 +25,18 @@ namespace OnlineStore.Data.Repositories
                 "RETURNING id";
 
             return await _session.Connection.ExecuteScalarAsync<int>(sql, entity, _session.Transaction);
+        }
+
+        public async Task<int> CreateRangeAsync(IEnumerable<User> entities)
+        {
+            const string sql =
+                "INSERT INTO \"user\"" +
+                "(first_name, last_name, email, password)" +
+                "VALUES" +
+                "(@FirstName, @LastName, @Email, @Password)" +
+                "RETURNING id";
+
+            return await _session.Connection.ExecuteScalarAsync<int>(sql, entities, _session.Transaction);
         }
 
         public async Task<int> DeleteAsync(int id)

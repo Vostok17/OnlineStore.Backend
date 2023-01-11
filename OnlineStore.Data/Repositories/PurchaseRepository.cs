@@ -1,7 +1,9 @@
-﻿using Dapper;
+﻿using System.Text;
+using Dapper;
 using OnlineStore.Data.Repositories.Core;
 using OnlineStore.Domain.Contracts.Repositories;
 using OnlineStore.Domain.Entities;
+using static Dapper.SqlMapper;
 
 namespace OnlineStore.Data.Repositories
 {
@@ -24,6 +26,31 @@ namespace OnlineStore.Data.Repositories
                 "RETURNING id";
 
             return await _session.Connection.ExecuteScalarAsync<int>(sql, entity, _session.Transaction);
+        }
+
+        public async Task<int> CreateRangeAsync(IEnumerable<PurchasedItem> entities)
+        {
+            var sqlBuilder = new StringBuilder("INSERT INTO purchase (user_id, laptop_id, date, purchase_token) VALUES ");
+
+            foreach (var entity in entities)
+            {
+                string valuesToInsert = string.Format(
+                    "({0}, {1}, '{2}', '{3}')",
+                    entity.UserId,
+                    entity.LaptopId,
+                    entity.Date,
+                    entity.PurchaseToken);
+
+                for (int i = 0; i < entity.Count; i++)
+                {
+                    sqlBuilder.Append(valuesToInsert);
+                    sqlBuilder.Append(',');
+                }
+            }
+
+            string sql = sqlBuilder.ToString().TrimEnd(',');
+
+            return await _session.Connection.ExecuteAsync(sql, _session.Transaction);
         }
 
         public async Task<int> DeleteAsync(int id)
@@ -63,9 +90,9 @@ namespace OnlineStore.Data.Repositories
         public async Task<IEnumerable<PurchasedItem>> GetByToken(Guid token)
         {
             const string sql =
-                "SELECT purchase_token, user_id, laptop_id, COUNT(*) FROM purchase p " +
-                "GROUP BY p.purchase_token, p.laptop_id, p.user_id " +
-                "WHERE @purchase_token=@token";
+                "SELECT purchase_token, user_id, laptop_id, COUNT(*) AS \"Count\" FROM purchase p " +
+                "WHERE purchase_token=@token " +
+                "GROUP BY p.purchase_token, p.laptop_id, p.user_id";
 
             return await _session.Connection.QueryAsync<PurchasedItem>(sql, new { token });
         }

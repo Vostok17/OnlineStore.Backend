@@ -20,7 +20,7 @@ namespace OnlineStore.API.Controllers
         }
 
         [HttpGet("{id}", Name = "GetLaptopDetails")]
-        public async Task<ActionResult<LaptopDetailsModel>> Get(int id)
+        public async Task<ActionResult<LaptopDetailsModel>> GetProductDetails(int id)
         {
             Laptop laptop = await _productDetailsService.GetLaptopDetailsAsync(id);
 
@@ -35,7 +35,7 @@ namespace OnlineStore.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<LaptopDetailsModel>> Post(LaptopDetailsModel laptopDetails)
+        public async Task<ActionResult<LaptopDetailsModel>> PostProductDetails(LaptopDetailsModel laptopDetails)
         {
             Laptop laptop = _mapper.Map<Laptop>(laptopDetails);
 
@@ -45,20 +45,15 @@ namespace OnlineStore.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<string>> Delete(int id)
+        public async Task<ActionResult<string>> DeleteProductDetails(int id)
         {
-            bool isDeleted = await _productDetailsService.DeleteLaptopDetailsAsync(id);
+            await _productDetailsService.DeleteLaptopDetailsAsync(id);
 
-            if (!isDeleted)
-            {
-                return NotFound();
-            }
-
-            return Ok(new { message = $"Laptop with Id = {id} was deleted" });
+            return Ok($"Laptop with Id = {id} was deleted");
         }
 
         [HttpPut]
-        public async Task<ActionResult<LaptopDetailsModel>> Update(LaptopDetailsModel laptopDetails)
+        public async Task<ActionResult<LaptopDetailsModel>> UpdateProductDetails(LaptopDetailsModel laptopDetails)
         {
             Laptop laptop = _mapper.Map<Laptop>(laptopDetails);
 

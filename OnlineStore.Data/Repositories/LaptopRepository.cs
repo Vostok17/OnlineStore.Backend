@@ -28,6 +28,20 @@ namespace OnlineStore.Data.Repositories
             return await _session.Connection.ExecuteScalarAsync<int>(sql, entity, _session.Transaction);
         }
 
+        public async Task<int> CreateRangeAsync(IEnumerable<Laptop> entities)
+        {
+            const string sql =
+                "INSERT INTO laptop " +
+                "(model, price, image_link, diagonal, refresh_rate, processor, operating_system," +
+                " amount_of_ram, ssd, video_card, wifi, bluetooth) " +
+                "VALUES " +
+                "(@Model, @Price, @ImageLink, @Diagonal, @RefreshRate, @Processor, @OperatingSystem," +
+                " @AmountOfRam, @Ssd, @VideoCard, @WiFi, @Bluetooth)" +
+                "RETURNING id";
+
+            return await _session.Connection.ExecuteScalarAsync<int>(sql, entities, _session.Transaction);
+        }
+
         public async Task<int> DeleteAsync(int id)
         {
             const string sql = "DELETE FROM laptop WHERE id=@id";

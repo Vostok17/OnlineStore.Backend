@@ -13,10 +13,12 @@ namespace OnlineStore.Domain.Services
             _purchaseRepository = purchaseRepository;
         }
 
-        public async Task<Guid> ProcessPurchaseAsync(List<(int Id, int Count)> data, int userId)
+        public async Task<Guid> ProcessPurchaseAsync(IEnumerable<(int Id, int Count)> data, int userId)
         {
             // Validation here.
             Guid token = Guid.NewGuid();
+
+            var purchase = new List<PurchasedItem>();
 
             foreach (var item in data)
             {
@@ -27,13 +29,13 @@ namespace OnlineStore.Domain.Services
                     UserId = userId,
                     Date = DateTime.Now,
                     PurchaseToken = token,
+                    Count = count,
                 };
 
-                for (int i = 0; i < count; i++)
-                {
-                    await _purchaseRepository.CreateAsync(purchasedItem);
-                }
+                purchase.Add(purchasedItem);
             }
+
+            await _purchaseRepository.CreateRangeAsync(purchase);
 
             return token;
         }

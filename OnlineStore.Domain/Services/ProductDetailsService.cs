@@ -24,11 +24,9 @@ namespace OnlineStore.Domain.Services
             return await _laptopRepository.CreateAsync(laptop);
         }
 
-        public async Task<bool> DeleteLaptopDetailsAsync(int id)
+        public async Task DeleteLaptopDetailsAsync(int id)
         {
-            int affectedRows = await _laptopRepository.DeleteAsync(id);
-
-            return affectedRows > 0;
+            await _laptopRepository.DeleteAsync(id);
         }
 
         public async Task UpdateLaptopDetailsAsync(Laptop laptop)

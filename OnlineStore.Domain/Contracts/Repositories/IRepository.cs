@@ -9,6 +9,8 @@
 
         Task<int> CreateAsync(T entity);
 
+        Task<int> CreateRangeAsync(IEnumerable<T> entities);
+
         Task<int> UpdateAsync(T entity);
 
         Task<int> DeleteAsync(int id);

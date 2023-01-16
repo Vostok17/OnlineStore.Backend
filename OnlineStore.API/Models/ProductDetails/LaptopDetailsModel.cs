@@ -7,17 +7,17 @@ namespace OnlineStore.API.Models.ProductDetails
     {
         public int Id { get; set; }
 
-        public string Title { get; set; }
-
-        public string ImageLink { get; set; }
+        public string Model { get; set; }
 
         public decimal Price { get; set; }
+
+        public string ImageLink { get; set; }
 
         public string Diagonal { get; set; }
 
         public string RefreshRate { get; set; }
 
-        public string Cpu { get; set; }
+        public string Processor { get; set; }
 
         public string OperatingSystem { get; set; }
 
@@ -25,7 +25,7 @@ namespace OnlineStore.API.Models.ProductDetails
 
         public string Ssd { get; set; }
 
-        public string Gpu { get; set; }
+        public string VideoCard { get; set; }
 
         public string WiFi { get; set; }
 
@@ -35,7 +35,7 @@ namespace OnlineStore.API.Models.ProductDetails
         {
             public LaptopProfile()
             {
-                CreateMap<Laptop, LaptopDetailsModel>();
+                CreateMap<Laptop, LaptopDetailsModel>().ReverseMap();
             }
         }
     }

@@ -1,68 +1,48 @@
-﻿using OnlineStore.Domain.Contracts.Services;
+﻿using OnlineStore.Domain.Contracts.Repositories;
+using OnlineStore.Domain.Contracts.Services;
 using OnlineStore.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineStore.Domain.Services
 {
-    public class ShoppingCartService : IShoppingCartService
+    public class ShoppingCartSevice : IShoppingCartService
     {
-        public IEnumerable<Laptop> GetLaptops()
+        private readonly IPurchaseRepository _purchaseRepository;
+
+        public ShoppingCartSevice(IPurchaseRepository purchaseRepository)
         {
-            return new List<Laptop>()
+            _purchaseRepository = purchaseRepository;
+        }
+
+        public async Task<Guid> ProcessPurchaseAsync(IEnumerable<(int Id, int Count)> data, int userId)
+        {
+            // Validation here.
+            Guid token = Guid.NewGuid();
+
+            var purchase = new List<PurchasedItem>();
+
+            foreach (var item in data)
             {
-                new Laptop()
+                var (id, count) = item;
+                var purchasedItem = new PurchasedItem
                 {
-                    Id = 0,
-                    Title = "ASUS Vivobook 15 X1502ZA-BQ641",
-                    ImageLink = "https://content1.rozetka.com.ua/goods/images/big/297014689.jpg",
-                    Price = 31999m,
-                    Diagonal = "13.3\" (2560x1600) WQXGA",
-                    RefreshRate = "60 Hz",
-                    Cpu = "Octa-core Apple M1",
-                    OperatingSystem = "macOS Big Sur",
-                    AmountOfRam = "4 Gb",
-                    Ssd = "256 Gb",
-                    Gpu = "Integrated",
-                    WiFi = string.Empty,
-                    Bluetooth = "5.0",
-                },
-                new Laptop()
-                {
-                    Id = 1,
-                    Title = "Acer Aspire 5 A515-45G-R9ML",
-                    ImageLink = "https://content1.rozetka.com.ua/goods/images/big/248481392.jpg",
-                    Price = 26999m,
-                    Diagonal = "13.3\" (2560x1600) WQXGA",
-                    RefreshRate = "60 Hz",
-                    Cpu = "Octa-core Apple M1",
-                    OperatingSystem = "macOS Big Sur",
-                    AmountOfRam = "4 Gb",
-                    Ssd = "256 Gb",
-                    Gpu = "Integrated",
-                    WiFi = string.Empty,
-                    Bluetooth = "5.0",
-                },
-                new Laptop()
-                {
-                    Id = 2,
-                    Title = "Apple MacBook Air 13\" M1 256GB 2020",
-                    ImageLink = "https://content.rozetka.com.ua/goods/images/big/30872664.jpg",
-                    Price = 26999m,
-                    Diagonal = "13.3\" (2560x1600) WQXGA",
-                    RefreshRate = "60 Hz",
-                    Cpu = "Octa-core Apple M1",
-                    OperatingSystem = "macOS Big Sur",
-                    AmountOfRam = "4 Gb",
-                    Ssd = "256 Gb",
-                    Gpu = "Integrated",
-                    WiFi = string.Empty,
-                    Bluetooth = "5.0",
-                },
-            };
+                    LaptopId = id,
+                    UserId = userId,
+                    Date = DateTime.Now,
+                    PurchaseToken = token,
+                    Count = count,
+                };
+
+                purchase.Add(purchasedItem);
+            }
+
+            await _purchaseRepository.CreateRangeAsync(purchase);
+
+            return token;
+        }
+
+        public async Task<IEnumerable<PurchasedItem>> GetItemsByPurchaseToken(Guid token)
+        {
+            return await _purchaseRepository.GetByToken(token);
         }
     }
 }

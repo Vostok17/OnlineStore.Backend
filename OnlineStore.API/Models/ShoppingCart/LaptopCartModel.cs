@@ -7,7 +7,7 @@ namespace OnlineStore.API.Models.ShoppingCart
     {
         public int Id { get; set; }
 
-        public string Title { get; set; }
+        public string Model { get; set; }
 
         public string ImageLink { get; set; }
 
@@ -19,7 +19,7 @@ namespace OnlineStore.API.Models.ShoppingCart
         {
             public LaptopProfile()
             {
-                CreateMap<Laptop, LaptopCartModel>();
+                CreateMap<Laptop, LaptopCartModel>().ReverseMap();
             }
         }
     }

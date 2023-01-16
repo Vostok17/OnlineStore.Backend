@@ -6,7 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddDomainServices();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -19,6 +18,12 @@ builder.Services.AddCors(options => options.AddPolicy(
 
 // Add AutoMapper profiles.
 builder.Services.AddAutoMapperProfiles();
+
+builder.Services.AddRepositories();
+builder.Services.AddDomainServices();
+
+// Add Dapper snake case mapping support.
+Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
 // Solve problem with swagger schemaId.
 builder.Services.AddSwaggerGen(options =>

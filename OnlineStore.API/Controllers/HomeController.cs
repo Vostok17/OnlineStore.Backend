@@ -13,8 +13,6 @@ namespace OnlineStore.API.Controllers
         private readonly IHomeService _homeService;
         private readonly IMapper _mapper;
 
-        private List<LaptopItemModel> _laptops = new();
-
         public HomeController(IHomeService homeService, IMapper mapper)
         {
             _homeService = homeService;
@@ -22,9 +20,9 @@ namespace OnlineStore.API.Controllers
         }
 
         [HttpGet("laptops")]
-        public ActionResult<IEnumerable<LaptopItemModel>> GetLaptops()
+        public async Task<ActionResult<IEnumerable<LaptopItemModel>>> GetLaptops()
         {
-            IEnumerable<Laptop> laptops = _homeService.GetLaptops();
+            IEnumerable<Laptop> laptops = await _homeService.GetAllLaptopsAsync();
             var laptopItemModels = _mapper.Map<IEnumerable<LaptopItemModel>>(laptops);
 
             return Ok(laptopItemModels);

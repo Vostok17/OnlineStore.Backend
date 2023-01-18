@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineStore.Data", "OnlineS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineStore.API", "OnlineStore.API\OnlineStore.API.csproj", "{26CD62A3-BE15-48FB-91E0-E29856320016}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MigrationRunner", "MigrationRunner\MigrationRunner.csproj", "{9F916E57-2049-49D2-AB7B-C374236ECE7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MigrationRunner", "MigrationRunner\MigrationRunner.csproj", "{9F916E57-2049-49D2-AB7B-C374236ECE7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineStore.Domain.Tests", "OnlineStore.Domain.Tests\OnlineStore.Domain.Tests.csproj", "{1459D38C-AC71-4BFA-AE00-83C42198770A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{9F916E57-2049-49D2-AB7B-C374236ECE7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F916E57-2049-49D2-AB7B-C374236ECE7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F916E57-2049-49D2-AB7B-C374236ECE7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1459D38C-AC71-4BFA-AE00-83C42198770A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1459D38C-AC71-4BFA-AE00-83C42198770A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1459D38C-AC71-4BFA-AE00-83C42198770A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1459D38C-AC71-4BFA-AE00-83C42198770A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

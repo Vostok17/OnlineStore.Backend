@@ -107,14 +107,11 @@ namespace OnlineStore.Domain.Tests.TestRepositories
 
         public Task<int> CreateAsync(Laptop entity)
         {
-            return Task.Run(() =>
-            {
-                int nextId = _laptops.Max(l => l.Id) + 1;
-                entity.Id = nextId;
+            int nextId = _laptops.Max(l => l.Id) + 1;
+            entity.Id = nextId;
 
-                _laptops.Add(entity);
-                return nextId;
-            });
+            _laptops.Add(entity);
+            return Task.FromResult(nextId);
         }
 
         public async Task<int> CreateRangeAsync(IEnumerable<Laptop> entities)
@@ -128,54 +125,50 @@ namespace OnlineStore.Domain.Tests.TestRepositories
 
         public Task<int> DeleteAsync(int id)
         {
-            return Task.Run(() =>
+            Laptop laptop = _laptops.Where(l => l.Id == id).First();
+            int index = _laptops.IndexOf(laptop);
+
+            int affectedRows = 0;
+
+            if (index != -1)
             {
-                Laptop laptop = _laptops.Where(l => l.Id == id).First();
-                int index = _laptops.IndexOf(laptop);
+                _laptops.RemoveAt(index);
+                affectedRows++;
+            }
 
-                int affectedRows = 0;
-
-                if (index != -1)
-                {
-                    _laptops.RemoveAt(index);
-                    affectedRows++;
-                }
-
-                return affectedRows;
-            });
+            return Task.FromResult(affectedRows);
         }
 
         public Task<IEnumerable<Laptop>> GetAllAsync()
         {
-            return Task.Run<IEnumerable<Laptop>>(() => _laptops);
+            return Task.FromResult<IEnumerable<Laptop>>(_laptops);
         }
 
         public Task<Laptop> GetByIdAsync(int id)
         {
-            return Task.Run(() => _laptops.Where(laptop => laptop.Id == id).SingleOrDefault());
+            Laptop laptop = _laptops.Where(laptop => laptop.Id == id).SingleOrDefault();
+            return Task.FromResult(laptop);
         }
 
         public Task<Laptop> GetByModelAsync(string model)
         {
-            return Task.Run(() => _laptops.Where(laptop => laptop.Model == model).SingleOrDefault());
+            Laptop laptop = _laptops.Where(laptop => laptop.Model == model).SingleOrDefault();
+            return Task.FromResult(laptop);
         }
 
         public Task<int> UpdateAsync(Laptop entity)
         {
-            return Task.Run(() =>
+            Laptop previousLaptop = _laptops.Where(l => l.Id == entity.Id).First();
+            int index = _laptops.IndexOf(entity);
+
+            int rowsAffected = 0;
+            if (index != -1)
             {
-                Laptop previousLaptop = _laptops.Where(l => l.Id == entity.Id).First();
-                int index = _laptops.IndexOf(entity);
+                _laptops[index] = entity;
+                rowsAffected = 1;
+            }
 
-                int rowsAffected = 0;
-                if (index != -1)
-                {
-                    _laptops[index] = entity;
-                    rowsAffected = 1;
-                }
-
-                return rowsAffected;
-            });
+            return Task.FromResult(rowsAffected);
         }
     }
 }

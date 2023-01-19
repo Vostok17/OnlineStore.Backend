@@ -27,14 +27,11 @@ namespace OnlineStore.Domain.Tests.TestRepositories
 
         public Task<int> CreateAsync(User entity)
         {
-            return Task.Run(() =>
-            {
-                int nextId = _users.Max(u => u.Id) + 1;
-                entity.Id = nextId;
+            int nextId = _users.Max(u => u.Id) + 1;
+            entity.Id = nextId;
 
-                _users.Add(entity);
-                return nextId;
-            });
+            _users.Add(entity);
+            return Task.FromResult(nextId);
         }
 
         public async Task<int> CreateRangeAsync(IEnumerable<User> entities)
@@ -48,48 +45,43 @@ namespace OnlineStore.Domain.Tests.TestRepositories
 
         public Task<int> DeleteAsync(int id)
         {
-            return Task.Run(() =>
+            User user = _users.Where(u => u.Id == id).First();
+            int index = _users.IndexOf(user);
+
+            int affectedRows = 0;
+            if (index != -1)
             {
-                User user = _users.Where(u => u.Id == id).First();
-                int index = _users.IndexOf(user);
+                _users.RemoveAt(index);
+                affectedRows++;
+            }
 
-                int affectedRows = 0;
-                if (index != -1)
-                {
-                    _users.RemoveAt(index);
-                    affectedRows++;
-                }
-
-                return affectedRows;
-            });
+            return Task.FromResult(affectedRows);
         }
 
         public Task<IEnumerable<User>> GetAllAsync()
         {
-            return Task.Run<IEnumerable<User>>(() => _users);
+            return Task.FromResult<IEnumerable<User>>(_users);
         }
 
         public Task<User> GetByIdAsync(int id)
         {
-            return Task.Run(() => _users.Where(u => u.Id == id).SingleOrDefault());
+            User user = _users.Where(u => u.Id == id).SingleOrDefault();
+            return Task.FromResult(user);
         }
 
         public Task<int> UpdateAsync(User entity)
         {
-            return Task.Run(() =>
+            User previousUser = _users.Where(u => u.Id == entity.Id).First();
+            int index = _users.IndexOf(entity);
+
+            int rowsAffected = 0;
+            if (index != -1)
             {
-                User previousUser = _users.Where(u => u.Id == entity.Id).First();
-                int index = _users.IndexOf(entity);
+                _users[index] = entity;
+                rowsAffected = 1;
+            }
 
-                int rowsAffected = 0;
-                if (index != -1)
-                {
-                    _users[index] = entity;
-                    rowsAffected = 1;
-                }
-
-                return rowsAffected;
-            });
+            return Task.FromResult(rowsAffected);
         }
     }
 }

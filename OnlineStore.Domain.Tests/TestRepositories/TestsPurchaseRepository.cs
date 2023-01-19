@@ -34,13 +34,10 @@ namespace OnlineStore.Domain.Tests.TestRepositories
 
         public Task<int> CreateAsync(PurchasedItem entity)
         {
-            return Task.Run(() =>
-            {
-                Parallel.For(0, entity.Count, _ => _purchasedItems.Add(entity));
+            _purchasedItems.AddRange(Enumerable.Repeat(entity, entity.Count));
 
-                const int affectedRows = 1;
-                return affectedRows;
-            });
+            int affectedRows = entity.Count;
+            return Task.FromResult(affectedRows);
         }
 
         public async Task<int> CreateRangeAsync(IEnumerable<PurchasedItem> entities)
@@ -54,53 +51,49 @@ namespace OnlineStore.Domain.Tests.TestRepositories
 
         public Task<int> DeleteAsync(int id)
         {
-            return Task.Run(() =>
+            PurchasedItem item = _purchasedItems.Where(i => i.Id == id).First();
+            int index = _purchasedItems.IndexOf(item);
+
+            int affectedRows = 0;
+            if (index != -1)
             {
-                PurchasedItem item = _purchasedItems.Where(i => i.Id == id).First();
-                int index = _purchasedItems.IndexOf(item);
+                _purchasedItems.RemoveAt(index);
+                affectedRows++;
+            }
 
-                int affectedRows = 0;
-                if (index != -1)
-                {
-                    _purchasedItems.RemoveAt(index);
-                    affectedRows++;
-                }
-
-                return affectedRows;
-            });
+            return Task.FromResult(affectedRows);
         }
 
         public Task<IEnumerable<PurchasedItem>> GetAllAsync()
         {
-            return Task.Run<IEnumerable<PurchasedItem>>(() => _purchasedItems);
+            return Task.FromResult<IEnumerable<PurchasedItem>>(_purchasedItems);
         }
 
         public Task<PurchasedItem> GetByIdAsync(int id)
         {
-            return Task.Run(() => _purchasedItems.Where(i => i.Id == id).SingleOrDefault());
+            PurchasedItem item = _purchasedItems.Where(i => i.Id == id).SingleOrDefault();
+            return Task.FromResult(item);
         }
 
         public Task<IEnumerable<PurchasedItem>> GetByToken(Guid token)
         {
-            return Task.Run(() => _purchasedItems.Where(i => i.PurchaseToken == token));
+            IEnumerable<PurchasedItem> items = _purchasedItems.Where(i => i.PurchaseToken == token);
+            return Task.FromResult(items);
         }
 
         public Task<int> UpdateAsync(PurchasedItem entity)
         {
-            return Task.Run(() =>
+            PurchasedItem previousItem = _purchasedItems.Where(i => i.Id == entity.Id).First();
+            int index = _purchasedItems.IndexOf(previousItem);
+
+            int affectedRows = 0;
+            if (index != -1)
             {
-                PurchasedItem previousItem = _purchasedItems.Where(i => i.Id == entity.Id).First();
-                int index = _purchasedItems.IndexOf(previousItem);
+                _purchasedItems[index] = entity;
+                affectedRows++;
+            }
 
-                int affectedRows = 0;
-                if (index != -1)
-                {
-                    _purchasedItems[index] = entity;
-                    affectedRows++;
-                }
-
-                return affectedRows;
-            });
+            return Task.FromResult(affectedRows);
         }
     }
 }
